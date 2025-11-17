@@ -1,0 +1,48 @@
+# Operating System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# IDE and Editor Files
+.vscode/
+.idea/
+*.code-workspace
+*.swp
+*.swo
+*~
+.sublime-workspace
+.sublime-project
+.atom/
+.project
+.settings/
+
+# Node/npm
+node_modules/
+package-lock.json
+npm-debug.log*
+yarn-error.log*
+
+# Build files
+dist/
+build/
+out/
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+.cache/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# System
+.AppleDouble
+.TemporaryItems
