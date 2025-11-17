@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fly Finance FX Conversion Savings Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            color-scheme: light only;
+        }
+
+        html, body {
+            background: #FFFFFF !important;
+            color: #000000 !important;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        body {
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 20px;
+            background: #FFFFFF;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .header-logo img {
+            height: 60px;
+            object-fit: contain;
+        }
+
+        .header-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 12px;
+        }
+
+        .header-subtitle {
+            font-size: 18px;
+            color: #6B7280;
+            margin-bottom: 8px;
+        }
+
+        .header-tagline {
+            font-size: 16px;
+            color: #9CA3AF;
+        }
+
+        /* Quick Note */
+        .quick-note-instructions {
+            display: flex;
+            align-items: center;
+            background: #E6F3FF;
+            color: #0066CC;
+            font-size: 15px;
+            border-radius: 6px;
+            padding: 12px 20px;
+            margin: 0 auto 30px auto;
+            max-width: 640px;
+            font-weight: 500;
+            border: 1.5px solid #B6E0FA;
+            box-shadow: 0 2px 6px 0 rgba(0, 102, 204, 0.03);
+        }
+
+        .quick-note-instructions svg {
+            flex-shrink: 0;
+            margin-right: 6px;
+        }
+
+        /* Input Section */
+        .input-section {
+            background: #FFFFFF;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-field, .input-select {
+            padding: 12px 16px;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #000000;
+            background: #FFFFFF;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus, .input-select:focus {
+            outline: none;
+            border-color: #0066CC;
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+        }
+
+        .calculate-button {
+            background: #0066CC;
+            color: #FFFFFF;
+            padding: 16px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 auto;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 102, 204, 0.2);
+        }
+
+        .calculate-button:hover {
+            background: #0052A3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 102, 204, 0.3);
+        }
+
+        /* Comparison Section */
+        .comparison-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .comparison-card {
+            background: #FFFFFF;
+            border: 3px solid;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .bank-card {
+            border-color: #E74C3C;
+        }
+
+        .fly-card {
+            border-color: #00A86B;
+            position: relative;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #E5E7EB;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #000000;
+        }
+
+        .recommended-badge {
+            background: #E8F5E8;
+            color: #00A86B;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid #C3E6CB;
+        }
+
+        .markup-bubble {
+            background: #E8F5E8;
+            color: #00A86B;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid #C3E6CB;
+            margin-bottom: 16px;
+            display: inline-block;
+        }
+
+        .card-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        .card-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #000000;
+        }
+
+        .item-value {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .bank-card .item-value {
+            color: #E74C3C;
+        }
+
+        .fly-card .item-value {
+            color: #00A86B;
+        }
+
+        .savings-box {
+            background: #E6F3FF;
+            border: 2px solid #0066CC;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 24px;
+            text-align: center;
+        }
+
+        .savings-label {
+            font-size: 13px;
+            color: #0066CC;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .savings-amount {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0066CC;
+        }
+
+        /* Benefits Section */
+        .benefits-section {
+            background: #FFFFFF;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #000000;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .benefit-item {
+            padding: 16px;
+            background: #F9FAFB;
+            border-radius: 8px;
+            border: 1px solid #E5E7EB;
+            font-size: 14px;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            background: #FFFFFF;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .contact-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #000000;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        .contact-card {
+            background: #F9FAFB;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .contact-card:hover {
+            border-color: #0066CC;
+            background: #FFFFFF;
+            box-shadow: 0 4px 12px rgba(0, 102, 204, 0.1);
+        }
+
+        .contact-icon {
+            width: 48px;
+            height: 48px;
+            background: #E6F3FF;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .contact-icon svg {
+            color: #0066CC;
+            width: 24px;
+            height: 24px;
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6B7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .contact-value {
+            color: #000000;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .contact-value:hover {
+            color: #0066CC;
+        }
+
+        .onboarding-section {
+            background: #F9FAFB;
+            border-radius: 12px;
+            border: 2px solid #E5E7EB;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .onboarding-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 16px;
+        }
+
+        .onboarding-text {
+            color: #6B7280;
+            font-size: 16px;
+            margin-bottom: 24px;
+        }
+
+        .onboarding-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #0066CC;
+            color: #FFFFFF;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin-bottom: 16px;
+        }
+
+        .onboarding-button:hover {
+            background: #0052A3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+        }
+
+        .onboarding-note {
+            color: #9CA3AF;
+            font-size: 14px;
+        }
+
+        /* Action Buttons */
+        .action-section {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 40px 20px;
+            background: #FFFFFF;
+            border-top: 1px solid #E5E7EB;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            padding: 14px 32px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 8px;
+            border: 2px solid;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: inherit;
+        }
+
+        .download-pdf-btn {
+            background: #00A86B;
+            color: #FFFFFF;
+            border-color: #00A86B;
+        }
+
+        .download-pdf-btn:hover {
+            background: #008f5a;
+            border-color: #008f5a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 168, 107, 0.3);
+        }
+
+        .secondary-btn {
+            background: #FFFFFF;
+            color: #374151;
+            border-color: #D1D5DB;
+        }
+
+        .secondary-btn:hover {
+            background: #F9FAFB;
+            border-color: #9CA3AF;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Print Styles */
+        @media print {
+            .action-section,
+            .action-button,
+            .download-pdf-btn,
+            .secondary-btn,
+            button,
+            input[type="button"],
+            input[type="submit"] {
+                display: none !important;
+            }
+
+            body {
+                background: white !important;
+                margin: 0;
+                padding: 10mm;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+
+            .comparison-card,
+            .benefit-item,
+            .contact-card {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+
+            .container {
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+
+            img {
+                max-width: 100%;
+                page-break-inside: avoid;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 20px;
+            }
+
+            .header-title {
+                font-size: 24px;
+            }
+
+            .input-section,
+            .benefits-section,
+            .contact-section {
+                padding: 20px;
+            }
+
+            .action-section {
+                flex-direction: column;
+            }
+
+            .action-button {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .comparison-section {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-logo">
+                <img src="Fly-Logo.jpg" alt="Fly Finance Logo">
+                <img src="black-4x.jpg" alt="Fly Finance by Leverage">
+            </div>
+            <h1 class="header-title">FX Conversion Savings Calculator</h1>
+            <p class="header-subtitle">Discover how much your clients can save with Fly Finance</p>
+            <p class="header-tagline">Export Internationally. Collect Locally. Fast Settlement</p>
+        </div>
+
+        <!-- Quick Note -->
+        <div class="quick-note-instructions">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="9" cy="9" r="8"/><path d="M9 6v3m0 3h.01"/>
+            </svg>
+            <span>To compare what you received vs. Fly Finance, just fill in your currency, FX amount received, INR credited, and the date. The tool will show your conversion rate and potential savings instantly.</span>
+        </div>
+
+        <!-- Input Section -->
+        <div class="input-section">
+            <div class="input-grid">
+                <div class="input-group">
+                    <label class="input-label">Currency</label>
+                    <select id="currency" class="input-select" onchange="calculateComparison()">
+                        <option value="GBP">GBP - British Pound</option>
+                        <option value="USD">USD - US Dollar</option>
+                        <option value="EUR">EUR - Euro</option>
+                        <option value="AUD">AUD - Australian Dollar</option>
+                        <option value="CAD">CAD - Canadian Dollar</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">FX Amount</label>
+                    <input type="number" id="fxAmount" class="input-field" placeholder="0.00" oninput="calculateComparison()">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">INR Received</label>
+                    <input type="number" id="inrReceived" class="input-field" placeholder="0.00" oninput="calculateComparison()">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Date</label>
+                    <input type="date" id="transactionDate" class="input-field" onchange="calculateComparison()">
+                </div>
+            </div>
+
+            <button class="calculate-button" onclick="calculateComparison()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                </svg>
+                Calculate
+            </button>
+        </div>
+
+        <!-- Comparison Section -->
+        <div class="comparison-section" id="comparisonResults" style="display: none;">
+            <!-- Traditional Bank -->
+            <div class="comparison-card bank-card">
+                <div class="card-header">
+                    <div class="card-title">Traditional Bank</div>
+                </div>
+
+                <div class="card-item">
+                    <span class="item-label">FX AMOUNT</span>
+                    <span class="item-value" id="bankFxAmount">£0.00</span>
+                </div>
+
+                <div class="card-item">
+                    <span class="item-label">IBR RATE</span>
+                    <span class="item-value" id="bankIbrRate">0.00</span>
+                </div>
+
+                <div class="card-item">
+                    <span class="item-label">CONVERSION RATE</span>
+                    <span class="item-value" id="bankConversionRate">0.00</span>
+                </div>
+
+                <div class="card-item">
+                    <span class="item-label">MARK UP CHARGED</span>
+                    <span class="item-value" id="bankMarkup">0.00%</span>
+                </div>
+
+                <div class="card-item">
+                    <span class="item-label">INR AMOUNT RECEIVED</span>
+                    <span class="item-value" id="bankInrAmount">₹0.00</span>
+                </div>
+            </div>
+
+            <!-- Fly Finance -->
+            <div class="comparison-card fly-card">
+                <div class="card-header">
+                    <div class="card-title">Fly Finance</div>
+                    <div class="recommended-badge">✓ RECOMMENDED</div>
+                </div>
+
+                <div class="markup-bubble">✓ Transparent 1.00% markup</div>
+
+                <div class="card-item">
+                    <span class="item-label">FX AMOUNT</span>
+                    <span class="item-value" id="flyFxAmount">£0.00</span>
+                </div>
+
+                <div class="card-item">
+                    <span class="item-label">IBR RATE</span>
+                    <span class="item-value" id="flyIbrRate">0.00</span>
+                </div>
+
+                <div class="card-item">
+                    <span class="item-label">CONVERSION RATE</span>
+                    <span class="item-value" id="flyConversionRate">0.00</span>
+                </div>
+
+                <div class="card-item">
+                    <span class="item-label">MARK UP CHARGED</span>
+                    <span class="item-value" id="flyMarkup">1.00%</span>
+                </div>
+
+                <div class="card-item">
+                    <span class="item-label">INR AMOUNT RECEIVED</span>
+                    <span class="item-value" id="flyInrAmount">₹0.00</span>
+                </div>
+
+                <div class="savings-box">
+                    <div class="savings-label">You Save</div>
+                    <div class="savings-amount" id="savingsAmount">₹0.00</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Benefits Section -->
+        <div class="benefits-section">
+            <h2 class="section-title">What Fly Finance Offers You</h2>
+            <div class="benefits-grid">
+                <div class="benefit-item">✓ Seamless Inward Remittance Facilitation</div>
+                <div class="benefit-item">✓ Best-in-Market FX with Full Transparency</div>
+                <div class="benefit-item">✓ Real-Time Transaction Tracking for exporters & service providers</div>
+                <div class="benefit-item">✓ Regulatory Compliance Support: automated e-FIRA generation</div>
+                <div class="benefit-item">✓ Assured Settlements to mapped accounts within T+1 days</div>
+                <div class="benefit-item">✓ Multi-Currency Support: USD, EUR, GBP, AED & more</div>
+            </div>
+        </div>
+
+        <!-- Contact Section -->
+        <div class="contact-section">
+            <h2 class="contact-title">Contact Details</h2>
+
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-label">Email</div>
+                        <a href="mailto:tradefx@fly.finance" class="contact-value">tradefx@fly.finance</a>
+                    </div>
+                </div>
+
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                        </svg>
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-label">Call</div>
+                        <a href="tel:+918108343511" class="contact-value">+91 8108343511</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="onboarding-section">
+                <h3 class="onboarding-title">Ready to Get Started?</h3>
+                <p class="onboarding-text">Join hundreds of businesses saving on FX conversions with Fly Finance</p>
+                <a href="https://forms.gle/YOUR_GOOGLE_FORM_ID" target="_blank" class="onboarding-button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Start Onboarding
+                </a>
+                <p class="onboarding-note">Complete our quick onboarding form to get started</p>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-section">
+            <button class="action-button download-pdf-btn" onclick="downloadPDF()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"></path>
+                    <path d="M6 14h12v8H6z"></path>
+                </svg>
+                Download PDF Report
+            </button>
+
+            <button class="action-button secondary-btn" onclick="viewSampleCalculation()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                View Sample Calculation
+            </button>
+
+            <button class="action-button secondary-btn" onclick="resetCalculator()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+                Try Different Amount
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Historical rates database
+        const historicalRates = {
+            'GBP': {
+                '2025-10-10': 118.51,
+                '2025-10-16': 117.70,
+                '2025-10-21': 117.85
+            },
+            'USD': {
+                '2025-10-10': 88.75,
+                '2025-10-16': 88.02,
+                '2025-10-21': 84.10
+            },
+            'EUR': {
+                '2025-10-10': 96.20,
+                '2025-10-16': 95.50,
+                '2025-10-21': 91.50
+            },
+            'AUD': {
+                '2025-10-16': 58.45,
+                '2025-10-21': 57.20
+            },
+            'CAD': {
+                '2025-10-16': 64.20,
+                '2025-10-21': 63.80
+            }
+        };
+
+        function getIBRRate(currency, date) {
+            if (historicalRates[currency] && historicalRates[currency][date]) {
+                return historicalRates[currency][date];
+            }
+            // Default current rates
+            const defaultRates = {
+                'GBP': 117.85,
+                'USD': 84.10,
+                'EUR': 91.50,
+                'AUD': 57.20,
+                'CAD': 63.80
+            };
+            return defaultRates[currency] || 100;
+        }
+
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(value);
+        }
+
+        function calculateComparison() {
+            const currency = document.getElementById('currency').value;
+            const fxAmount = parseFloat(document.getElementById('fxAmount').value) || 0;
+            const inrReceived = parseFloat(document.getElementById('inrReceived').value) || 0;
+            const date = document.getElementById('transactionDate').value;
+
+            if (fxAmount <= 0 || inrReceived <= 0) {
+                document.getElementById('comparisonResults').style.display = 'none';
+                return;
+            }
+
+            const ibrRate = getIBRRate(currency, date);
+            const bankConversionRate = inrReceived / fxAmount;
+            const bankMarkup = ((ibrRate - bankConversionRate) / ibrRate) * 100;
+
+            const flyConversionRate = ibrRate * 0.99;
+            const flyInrAmount = fxAmount * flyConversionRate;
+            const savings = flyInrAmount - inrReceived;
+
+            // Display results
+            document.getElementById('comparisonResults').style.display = 'grid';
+
+            // Bank Card
+            document.getElementById('bankFxAmount').textContent = fxAmount.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' ' + currency;
+            document.getElementById('bankIbrRate').textContent = ibrRate.toFixed(2);
+            document.getElementById('bankConversionRate').textContent = bankConversionRate.toFixed(2);
+            document.getElementById('bankMarkup').textContent = bankMarkup.toFixed(2) + '%';
+            document.getElementById('bankInrAmount').textContent = formatCurrency(inrReceived);
+
+            // Fly Finance Card
+            document.getElementById('flyFxAmount').textContent = fxAmount.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' ' + currency;
+            document.getElementById('flyIbrRate').textContent = ibrRate.toFixed(2);
+            document.getElementById('flyConversionRate').textContent = flyConversionRate.toFixed(2);
+            document.getElementById('flyInrAmount').textContent = formatCurrency(flyInrAmount);
+            document.getElementById('savingsAmount').textContent = formatCurrency(savings);
+        }
+
+        function downloadPDF() {
+            const actionSection = document.querySelector('.action-section');
+            if (actionSection) {
+                actionSection.style.display = 'none';
+            }
+            window.print();
+            setTimeout(() => {
+                if (actionSection) {
+                    actionSection.style.display = 'flex';
+                }
+            }, 100);
+        }
+
+        function viewSampleCalculation() {
+            document.getElementById('currency').value = 'GBP';
+            document.getElementById('fxAmount').value = '30000';
+            document.getElementById('inrReceived').value = '3504000';
+            document.getElementById('transactionDate').value = '2025-10-10';
+            calculateComparison();
+        }
+
+        function resetCalculator() {
+            document.getElementById('currency').value = 'GBP';
+            document.getElementById('fxAmount').value = '';
+            document.getElementById('inrReceived').value = '';
+            document.getElementById('transactionDate').value = '';
+            document.getElementById('comparisonResults').style.display = 'none';
+        }
+
+        // Set today's date as default
+        document.addEventListener('DOMContentLoaded', () => {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('transactionDate').value = today;
+        });
+    </script>
+</body>
+</html>
